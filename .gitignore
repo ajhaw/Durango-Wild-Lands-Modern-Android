@@ -36,3 +36,16 @@ config.json
 .idea/
 .DS_Store
 Thumbs.db
+
+# Android reverse-engineering/build artifacts
+*.dex
+*.odex
+*.vdex
+*.oat
+*.arsc
+smali*/
+original/
+patched/
+extracted/
+decompiled/
+apktool*/

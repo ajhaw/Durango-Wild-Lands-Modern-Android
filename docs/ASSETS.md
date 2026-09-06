@@ -1,22 +1,18 @@
-# AssetBundle Preservation Notes
+# AssetBundle Preservation
 
-## Client endpoints
+## Local testing
 
-Known original literals include:
+For preservation testing, the client can be configured to request required
+AssetBundles from a user-controlled local HTTP service instead of relying on
+historical third-party infrastructure.
 
-```text
-http://assetbundles.k.nexon.com/{0}/{1}/Info.5.2.1.json
-http://durango-assetbundles.akamaized.net/{0}/{1}/
-```
-
-For local preservation testing the AssetBundle root can be redirected to a
-local service such as:
+Example local root:
 
 ```text
 http://127.0.0.1:18080/
 ```
 
-with:
+For an Android device connected through ADB:
 
 ```bash
 adb reverse tcp:18080 tcp:18080
@@ -24,36 +20,24 @@ adb reverse tcp:18080 tcp:18080
 
 ## Archived cache mapping
 
-Archived cache layout:
+A user-supplied Unity cache may contain entries shaped like:
 
 ```text
 UnityCache/Shared/<NAME>.<CRC>/<HASH>/__data
 ```
 
-HTTP repository layout used by the research environment:
+The included `tools/build_asset_repo.py` can create a symlink-only HTTP view
+from those local files. It does not provide or download game assets.
 
-```text
-asset-repo/<NAME>.<CRC>.bundle
-```
+Do not commit the resulting asset repository.
 
-Do not commit the archived `__data` files or proprietary AssetBundles.
+## Important cache behavior
 
-## Cache integrity
+Do not assume a manifest's logical size field is identical to the physical
+cached `__data` length. When validating preserved files, compare against the
+user's known-good archived copy using actual byte length and a cryptographic
+hash.
 
-Do not assume the manifest `Size` field equals the physical cached `__data`
-length. Compare a cache entry against the user's archived original using
-actual byte size and SHA-256.
-
-If an existing Android cache file is larger than the intended replacement,
-truncate it before `adb push`:
-
-```bash
-adb shell "truncate -s 0 '$DST'"
-adb push "$SRC" "$DST"
-```
-
-## Known warning
-
-Do not use a catch-all diagnostic response that serves one AssetBundle for
-multiple requested paths. Unity may cache the wrong bundle under a valid URL,
-causing confusing duplicate-AssetBundle errors later.
+Never make a diagnostic HTTP server return one arbitrary AssetBundle for
+multiple requested names. Unity can cache that response under the requested
+identity, producing misleading duplicate-bundle errors later.
