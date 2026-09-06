@@ -1,0 +1,2 @@
+# Runtime dependencies will be pinned once MessagePack/Snappy
+# interoperability is implemented and tested.

@@ -1,0 +1,38 @@
+# Proprietary Durango / Unity client data
+*.apk
+*.aab
+*.so
+*.keystore
+*.jks
+global-metadata*.dat
+Info.*.json
+*.bundle
+__data
+__info
+UnityCache/
+asset-repo/
+local-assets/
+dump/
+DummyDll/
+durango-patch/
+
+# Reverse-engineering working output
+online-bootstrap-native*.txt
+*.log
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Local configuration / secrets
+.env
+config.json
+*.local.json
+
+# Editors / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
